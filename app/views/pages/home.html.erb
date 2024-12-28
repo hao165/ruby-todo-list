@@ -1,0 +1,7 @@
+<h1>Welcome to the TODO List</h1>
+
+<ul>
+  <% @todos.each do |todo| %>
+    <li><%= todo.title %> - <%= todo.completed ? 'Completed' : 'Pending' %></li>
+  <% end %>
+</ul>
