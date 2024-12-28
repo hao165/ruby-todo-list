@@ -1,3 +1,6 @@
 Rails.application.routes.draw do
-  resources :todos
+  # API 路由
+  namespace :api do
+    resources :todos, only: [:index, :create, :update, :destroy]
+  end
 end
