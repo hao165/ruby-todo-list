@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%= csrf_meta_tags %>
+  <title>Login</title>
+
+  <!-- 引入 Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- 引入 Vue 3 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+</head>
+<body class="bg-gray-100 flex justify-center items-center h-screen">
+
+  <div id="app">
+    <login-form></login-form>
+  </div>
+
+  <!-- Vue 3 實現的登入表單 -->
+  <script>
+    const app = Vue.createApp({
+      components: {
+        'login-form': {
+          data() {
+            return {
+              email: '',
+              password: '',
+              errorMessage: ''
+            };
+          },
+          methods: {
+            async login() {
+              // 清空錯誤信息
+              this.errorMessage = '';
+              
+              // 向後端發送登入請求
+              try {
+                const response = await fetch('/api/login', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                  },
+                  body: JSON.stringify({
+                    email: this.email,
+                    password: this.password
+                  })
+                });
+                
+                const data = await response.json();
+
+                if (response.ok) {
+                  // 登入成功，儲存 token 並導向首頁
+                  localStorage.setItem('token', data.token);
+                  window.location.href = '/'; // 或者重定向到其他頁面
+                } else {
+                  // 顯示錯誤信息
+                  this.errorMessage = data.error || 'Login failed';
+                }
+              } catch (error) {
+                this.errorMessage = 'An error occurred. Please try again.';
+              }
+            }
+          },
+          template: `
+            <div class="max-w-sm w-full p-4 bg-white rounded shadow-lg">
+              <h1 class="text-2xl font-semibold mb-4 text-center">Login</h1>
+              <div v-if="errorMessage" class="bg-red-100 text-red-700 p-2 mb-4 rounded">
+                {{ errorMessage }}
+              </div>
+              <form @submit.prevent="login">
+                <div class="mb-4">
+                  <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                  <input v-model="email" type="email" id="email" class="mt-1 p-2 w-full border rounded-md" required />
+                </div>
+                <div class="mb-4">
+                  <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                  <input v-model="password" type="password" id="password" class="mt-1 p-2 w-full border rounded-md" required />
+                </div>
+                <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">Login</button>
+              </form>
+            </div>
+          `
+        }
+      }
+    });
+
+    app.mount('#app');
+  </script>
+</body>
+</html>

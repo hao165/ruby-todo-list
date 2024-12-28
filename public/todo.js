@@ -14,8 +14,21 @@ const app = Vue.createApp({
         async loadTodos() {
             try {
                 this.loading = true;
-                const response = await fetch('http://localhost:3000/api/todos'); // 這是 API 的 URL
+                const response = await fetch('http://localhost:3000/api/todos', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                });
                 const data = await response.json();
+                if (response.status === 401) {
+                    this.error = data.error;
+                    localStorage.removeItem('token');
+                    window.location.replace('/auth/login');
+                    return;
+                }
+
                 this.todos = data;
             } catch (err) {
                 this.error = 'Failed to fetch todos';
@@ -32,6 +45,7 @@ const app = Vue.createApp({
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-Token': csrfToken,
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
                     },
                     body: JSON.stringify({
                         title: this.newTodoTitle,
@@ -53,6 +67,7 @@ const app = Vue.createApp({
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-Token': csrfToken,
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
                     },
                     body: JSON.stringify({
                         title: todo.title,
@@ -72,6 +87,7 @@ const app = Vue.createApp({
                     method: 'DELETE',
                     headers: {
                         'X-CSRF-Token': csrfToken,
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
                     },
                 });
                 if (response.ok) {

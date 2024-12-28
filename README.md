@@ -1,8 +1,8 @@
-# TODO List API
+# TODO List (PAGE with API)
 
 首次建立 Ruby on Rails (RoR) 練習專案。
 
-遵守 MVC 架構，並撰寫 TestCase
+遵循 MVC 架構
 
 ---
 
@@ -15,22 +15,23 @@ rails-todo-api/
 ├── Gemfile                   # Rails 專案的 gem 依賴
 ├── Gemfile.lock              # 記錄具體版本的 gem 鎖定檔案
 ├── app/                      # 應用程式程式碼
-│   ├── controllers/          # 控制器，負責處理 HTTP 請求，並返回對應的響應
-│   │   └── todos_controller.rb  # 管理 TODO 項目的控制器
+│   ├── controllers/          # 控制器，PAGE
+│   │   ├── api/              # 控制器，API
+│   │   └── concerns/         # 控制器，共用邏輯
 │   ├── models/               # 模型，負責處理業務邏輯和與資料庫的交互
-│   │   └── todo.rb           # TODO 項目的模型
+│   ├── views/                # 視圖，處理應用的界面和呈現邏輯
+│   │   └── pages/            # 視圖，單頁內容
+│   └── serializers/          # 用於格式化 JSON 響應的序列化程式碼
 ├── config/                   # 配置檔案
 │   ├── database.yml          # 數據庫配置
 │   └── routes.rb             # 定義 API 路由
 ├── db/                       # 數據庫相關檔案
 │   ├── migrate/              # 數據庫遷移檔案
-│   │   └── *_create_todos.rb # 創建 TODO 表的遷移檔案
 │   └── seeds.rb              # 用於填充初始數據的種子檔案
 ├── test/                     # 測試文件
 │   ├── controllers/          # 控制器的單元測試
 │   ├── models/               # 模型的單元測試
-│   └── fixtures/             # 用於測試的假資料
-└─
+└─  └── fixtures/             # 用於測試的假資料
 ```
 
 ---
@@ -74,6 +75,7 @@ docker-compose up --build
 ```bash
 docker-compose exec app rails db:create
 docker-compose exec app rails db:migrate
+docker-compose exec app rails db:seed
 ```
 
 ### 4. 檢查應用運行狀況

@@ -67,6 +67,7 @@ GEM
       minitest (>= 5.1)
       tzinfo (~> 2.0)
     base64 (0.2.0)
+    bcrypt (3.1.20)
     bigdecimal (3.1.9)
     bootsnap (1.18.4)
       msgpack (~> 1.2)
@@ -87,6 +88,8 @@ GEM
     irb (1.14.3)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
+    jwt (2.10.1)
+      base64
     loofah (2.23.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -171,10 +174,12 @@ PLATFORMS
 
 DEPENDENCIES
   base64
+  bcrypt (~> 3.1.7)
   bigdecimal
   bootsnap
   debug
   drb
+  jwt
   mutex_m
   pg (~> 1.1)
   puma (~> 5.0)
